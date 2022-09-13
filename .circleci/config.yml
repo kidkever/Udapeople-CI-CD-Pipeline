@@ -329,8 +329,10 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      - notify:
+      - slack/on-hold:
           context: slack-secrets
+      # - notify:
+      #     context: slack-secrets
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
