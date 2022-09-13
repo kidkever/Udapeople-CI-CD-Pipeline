@@ -36,6 +36,28 @@ orbs:
 #             fi
 
 jobs:
+  notify:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*This is a text notification*",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+          event: always
+
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -49,7 +71,6 @@ jobs:
             cd frontend
             npm install
             npm run build
-            exit 1
       - slack/notify:
           event: fail
           mentions: "@kidkever"
@@ -71,7 +92,6 @@ jobs:
             cd backend
             npm install
             npm run build
-            exit 1
       - slack/notify:
           event: fail
           mentions: "@kidkever"
@@ -329,10 +349,8 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      - slack/on-hold:
+      - notify:
           context: slack-secrets
-      # - notify:
-      #     context: slack-secrets
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
