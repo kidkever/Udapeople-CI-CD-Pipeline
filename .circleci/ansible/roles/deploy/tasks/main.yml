@@ -1,12 +1,12 @@
 ---
 - name: Creates directory
   file:
-    path: ~/var/www/html/app
+    path: ~/project
     state: directory
 
 - name: Copy index test page
   shell: /
-    tar -xzvf artifact.tar.gz -C ~/var/www/html/app
+    tar -xzvf artifact.tar.gz -C ~/project
 
 - name: Executing node
   shell: |
