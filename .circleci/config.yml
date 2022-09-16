@@ -267,7 +267,7 @@ jobs:
       - checkout
       - run: yum install -y tar gzip
       - attach_workspace:
-          at: project/.circleci/ansible/inventory.txt
+          at: ~/
       - run:
           name: Install dependencies
           command: |
