@@ -271,6 +271,7 @@ jobs:
           command: |
             yum install python3 -y
             python3 -m pip install --user ansible
+            curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
             yum install nodejs -y
       - run:
           name: Get backend url
