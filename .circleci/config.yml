@@ -254,7 +254,6 @@ jobs:
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-            exit 1
       - run:
           name: Send migration results to kvdb
           command: |
@@ -265,7 +264,7 @@ jobs:
                 echo "No migrations are pending" 
             fi
       - revert-migrations
-      - destroy-environment
+      # - destroy-environment
 
   deploy-frontend:
     docker:
