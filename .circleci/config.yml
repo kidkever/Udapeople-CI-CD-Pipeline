@@ -242,7 +242,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/node
+      - image: cimg/node:12.22.5
     steps:
       - checkout
       - run:
