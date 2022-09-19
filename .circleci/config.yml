@@ -242,17 +242,11 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/python:3.10.6-node
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install AWS CLI v2
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
       - run:
           name: Run migrations
           command: |
