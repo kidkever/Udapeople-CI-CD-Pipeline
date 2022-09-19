@@ -260,7 +260,6 @@ jobs:
             else
                 echo "No migrations are pending" 
             fi
-
       - destroy-environment
 
   deploy-frontend:
