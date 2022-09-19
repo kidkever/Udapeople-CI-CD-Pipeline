@@ -25,24 +25,28 @@ commands:
             aws cloudformation delete-stack \
               --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
 
-#   revert-migrations:
-#     description: Revert the last migration if successfully run in the current workflow.
-#     parameters:
-#       # Add parameter here
-#     steps:
-#       - run:
-#           name: Revert migrations
-#           # Add when this will run
-#           command: |
-#             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-#             SUCCESS = 1
-#             if(( $SUCCESS==1 ));
-#             then
-#             #  cd ~/project/backend
-#             #  npm install
-#             #  Add revert code here. You can find this in the Getting Started section.
-#               exit 1
-#             fi
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      Workflow_ID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+            SUCCESS = 1
+            SUCCESS=$(curl --insecure  https://kvdb.io/EdFeRUHwCYu6jRHovH8UW3/migration_<< parameters.Workflow_ID >>)
+
+            if(( $SUCCESS==1 ));
+            then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
+              exit 1
+            fi
 
 jobs:
   notify:
@@ -251,11 +255,8 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
-            echo "~/project"
-            cat ~/project/backend/migrations_dump.txt
-            echo "/home"
-            cat /home/circleci/project/backend/migrations_dump.txt
             cat migrations_dump.txt
+            exit 1
       - run:
           name: Send migration results to kvdb
           command: |
@@ -265,6 +266,7 @@ jobs:
             else
                 echo "No migrations are pending" 
             fi
+      - revert-migrations
       - destroy-environment
 
   deploy-frontend:
