@@ -407,7 +407,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name udapeople-cloudfront-${CIRCLE_WORKFLOW_ID:0:7} \
-              --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
 
   cleanup:
@@ -440,12 +440,6 @@ jobs:
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                     --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"
-
-            echo "--------"
-            echo "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}"
-            echo "${OldWorkflowID}" =~ "${STACKS[@]}"
-            echo "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}"
-            echo "--------"
 
             # Clean up old stacks
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
@@ -484,7 +478,7 @@ workflows:
       #     requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      - cleanup
-        # requires: [cloudfront-update]
+      - cloudfront-update
+        # requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
