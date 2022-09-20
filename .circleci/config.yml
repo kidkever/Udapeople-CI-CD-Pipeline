@@ -34,6 +34,10 @@ commands:
           command: |
             SUCCESS=$(curl --insecure  https://kvdb.io/WWbgrsz2J1RvKLGyErPLWV/migration_<< parameters.Workflow_ID >>)
 
+            export TYPEORM_MIGRATIONS_DIR=./src/migrations
+            export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
+            export TYPEORM_MIGRATIONS=./src/migrations/*.ts
+
             if(( $SUCCESS==1 ));
             then
               cd ~/project/backend
@@ -357,6 +361,11 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: Install dependencies
+          command: |
+            curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
+            yum install nodejs -y
+      - run:
           name: Backend smoke test.
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
@@ -383,8 +392,8 @@ jobs:
             else
               exit 1
             fi
-      - revert-migrations
       - destroy-environment
+      - revert-migrations
 #   cloudfront-update:
 #     docker:
 #       # Docker image here that supports AWS CLI
