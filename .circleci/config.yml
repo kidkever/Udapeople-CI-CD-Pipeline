@@ -250,7 +250,7 @@ jobs:
             npm install
 
             export TYPEORM_HOST=udapeople-db.cc4qtpnyhpmn.us-east-1.rds.amazonaws.com
-            export TYPEORM_PORT=5532
+            export TYPEORM_PORT=5432
             export TYPEORM_USERNAME=postgres
             export TYPEORM_PASSWORD=pass1234
             export TYPEORM_DATABASE=glee
@@ -407,7 +407,7 @@ workflows:
   default:
     jobs:
       # - build-frontend
-      - build-backend
+      # - build-backend
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
