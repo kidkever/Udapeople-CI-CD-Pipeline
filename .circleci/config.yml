@@ -260,6 +260,7 @@ jobs:
             export TYPEORM_PASSWORD=pass1234
             export TYPEORM_DATABASE=glee
 
+            npm run migrations:revert
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
