@@ -244,18 +244,17 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install AWS CLI v2
-          command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-      - restore_cache:
-          keys: [backend-build]
-      - run:
           name: Run migrations
           command: |
             cd backend
             npm install
+
+            export TYPEORM_HOST=udapeople-db.cc4qtpnyhpmn.us-east-1.rds.amazonaws.com
+            export TYPEORM_PORT=5532
+            export TYPEORM_USERNAME=postgres
+            export TYPEORM_PASSWORD=pass1234
+            export TYPEORM_DATABASE=glee
+
             npm run migrations:revert
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
