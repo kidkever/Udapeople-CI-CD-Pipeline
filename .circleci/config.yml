@@ -442,9 +442,9 @@ jobs:
             echo Stack names: "${STACKS[@]}"
 
             echo "--------"
-            echo [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
-            echo [[ "${OldWorkflowID}" =~ "${STACKS[@]}"  ]]
-            echo [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
+            echo "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}"
+            echo "${OldWorkflowID}" =~ "${STACKS[@]}"
+            echo "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}"
             echo "--------"
 
             # Clean up old stacks
