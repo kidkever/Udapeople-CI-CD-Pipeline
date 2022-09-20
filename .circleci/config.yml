@@ -34,10 +34,6 @@ commands:
           command: |
             SUCCESS=$(curl --insecure  https://kvdb.io/WWbgrsz2J1RvKLGyErPLWV/migration_<< parameters.Workflow_ID >>)
 
-            export TYPEORM_MIGRATIONS_DIR=./src/migrations
-            export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
-            export TYPEORM_MIGRATIONS=./src/migrations/*.ts
-
             if(( $SUCCESS==1 ));
             then
               cd ~/project/backend
