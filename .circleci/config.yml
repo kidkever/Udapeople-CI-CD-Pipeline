@@ -6,24 +6,34 @@ orbs:
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    # parameters:
-    #   ID:
-    #     Description: Workflow Unique identifier.
-    #     Type: String
-    #     default: ${CIRCLE_WORKFLOW_ID:0:7}
+    parameters:
+      Workflow_ID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
-      - run:
-          name: Destroy backend environment
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
-      - run:
-          name: Destroy frontend environment
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
+      name: Destroy environments
+        when: on_fail
+        command: |
+          # Empty frontend bucket
+          aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+
+          # Delete frontend stack
+          aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
+
+          # Delete backend stack
+          aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
+      # - run:
+      #     name: Destroy backend environment
+      #     when: on_fail
+      #     command: |
+      #       aws cloudformation delete-stack \
+      #         --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
+      # - run:
+      #     name: Destroy frontend environment
+      #     when: on_fail
+      #     command: |
+      #       aws cloudformation delete-stack \
+      #         --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -247,6 +257,14 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - run:
+          name: Install AWS CLI v2
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Run migrations
           command: |
