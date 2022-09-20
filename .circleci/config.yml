@@ -38,6 +38,11 @@ commands:
             then
               cd ~/project/backend
               npm install
+
+              export TYPEORM_MIGRATIONS_DIR=./src/migrations
+              export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
+              export TYPEORM_MIGRATIONS=./src/migrations/*.ts
+
               npm run migrations:revert
               exit 0
             fi
