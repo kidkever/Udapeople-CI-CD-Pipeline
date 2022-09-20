@@ -426,7 +426,7 @@ jobs:
             curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
             yum install nodejs -y
       - run:
-          name: Get old stack workflow id
+          name: Get old stack workflow id & Delete old stacks
           command: |
 
             # Fetch the Old workflow ID
@@ -442,7 +442,7 @@ jobs:
             echo Stack names: "${STACKS[@]}"
 
             # Clean up old stacks
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             then
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
