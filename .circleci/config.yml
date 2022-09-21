@@ -429,6 +429,7 @@ jobs:
           name: Get old stack workflow id & Delete old stacks
           command: |
 
+
             # Fetch the Old workflow ID
             export OldWorkflowID=$(aws cloudformation \
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
