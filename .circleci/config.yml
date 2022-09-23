@@ -455,44 +455,20 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend:
-          filters:
-            branches:
-              only:
-                - dev-branch
-      - build-backend:
-          filters:
-            branches:
-              only:
-                - dev-branch
+      - build-frontend
+      - build-backend
       - test-frontend:
           requires: [build-frontend]
-          filters:
-            branches:
-              only:
-                - dev-branch
       - test-backend:
           requires: [build-backend]
-          filters:
-            branches:
-              only:
-                - dev-branch
       - scan-backend:
           requires: [build-backend]
-          filters:
-            branches:
-              only:
-                - dev-branch
       - scan-frontend:
           requires: [build-frontend]
-          filters:
-            branches:
-              only:
-                - dev-branch
       - notify:
           context: slack-secrets
       - deploy-infrastructure:
-          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only:
