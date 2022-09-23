@@ -248,6 +248,7 @@ jobs:
           command: |
             cd backend
             npm install
+            npm run migrations:revert
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
@@ -260,6 +261,7 @@ jobs:
                 echo "No migrations are pending" 
             fi
       - revert-migrations
+      - destroy-environment
 
   deploy-frontend:
     docker:
